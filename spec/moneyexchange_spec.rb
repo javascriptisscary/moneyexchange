@@ -6,6 +6,10 @@ RSpec.describe Moneyexchange do
   end
   
   
+    #######################
+    ##    CONVERSIONS    ##
+    #######################
+  
   describe "conversions" do
   
     before do
@@ -20,19 +24,38 @@ RSpec.describe Moneyexchange do
       expect(@money.amount).to eq(100)
     end
   
-    it "converts to USD" do
+    it "converts EUR to USD" do
+      @money = Money.new("EUR", 100)
       @money.convert_to("USD")
       expect(@money.amount).to eq(111.00)
       expect(@money.currency).to eq("USD")
     end
  
-    before do
+    it "converts EUR to BITCOIN" do
       @money = Money.new("EUR", 100)
-    end
- 
-    it "converts to BITCOIN" do
       @money.convert_to("bitcoin")
       expect(@money.amount).to eq(0.47)
+      expect(@money.currency).to eq("BITCOIN")
+    end
+  
+    it "converts USD to EUR" do
+      @money = Money.new("USD", 111)
+      @money.convert_to("eur")
+      expect(@money.amount).to eq(100)
+      expect(@money.currency).to eq("EUR")
+    end
+    
+    it "converts BITCOIN to EUR" do
+      @money = Money.new("BITCOIN", 0.47)
+      @money.convert_to("EUR")
+      expect(@money.amount).to eq(100)
+      expect(@money.currency).to eq("EUR")
+    end
+    
+    it "converts BITCOIN to USD" do
+      @money = Money.new("BITCOIN", 0.47)
+      @money.convert_to("USD")
+      expect(@money.amount).to eq(111)
       expect(@money.currency).to eq("BITCOIN")
     end
 
@@ -43,16 +66,15 @@ RSpec.describe Moneyexchange do
   end #end describe conversions
 
 
-
-
-
+    #######################
+    ##    COMPARISONS    ##
+    #######################
+    
   describe "comparisons" do
     before do
       @twenty_dollars = Money.new("USD", 20)
-      @fifty_eur_in_usd = Money.new("EUR", 50)
-      @fifty_eur_in_usd.convert_to("USD")
-      puts @fifty_eur_in_usd.currency
-      puts @fifty_eur_in_usd.amount
+      @fifty_eur = Money.new("EUR", 50)
+      @fifty_eur_in_usd = @fifty_eur.convert_to("USD")
     end
  
     it "compares two equal currencys with ==" do
@@ -62,7 +84,8 @@ RSpec.describe Moneyexchange do
     
     it "compares two different currencys with ==" do
       expect(@fifty_eur_in_usd).to eq(Money.new("EUR", 50))
-      expect(@fifty_eur_in_usd).to_not eq(Money.new("BITCOIN",20))
+      expect(@fifty_eur_in_usd).to eq(Money.new("BITCOIN", 0.235))
+      expect(@fifty_eur_in_usd).to_not eq(Money.new("BITCOIN",0.20))
     end
   
   end #end describe comparisons
