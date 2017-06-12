@@ -102,20 +102,48 @@ RSpec.describe Moneyexchange do
       @ten_bitcoin = Money.new("BITCOIN", 10)
     end
     
-    it "adds the same currency types together" do
-      expect(@fifty_eur + @fifty_eur).to eq(Money.new("EUR", 100))
-      expect(@twenty_dollars + @twenty_dollars).to eq(Money.new("USD", 40))
-      expect(@ten_bitcoin + @ten_bitcoin).to eq(Money.new("BITCOIN", 20))
-    end
+    describe "addition" do 
+      it "adds the same currency types together" do
+        expect(@fifty_eur + @fifty_eur).to eq(Money.new("EUR", 100))
+        expect(@twenty_dollars + @twenty_dollars).to eq(Money.new("USD", 40))
+        expect(@ten_bitcoin + @ten_bitcoin).to eq(Money.new("BITCOIN", 20))
+      end
+        
+      it "adds different currency types together" do
+        expect(@fifty_eur + @twenty_dollars).to eq(Money.new("EUR", 68.02))
+        expect(@ten_bitcoin + @fifty_eur).to eq(Money.new("BITCOIN", 10.24))
+        expect(@twenty_dollars + @ten_bitcoin).to eq(Money.new("USD", 2381.70))
+      end
       
-    it "adds different currency types together" do
-      expect(@fifty_eur + @twenty_dollars).to eq(Money.new("EUR", 68.02))
-      expect(@ten_bitcoin + @fifty_eur).to eq(Money.new("BITCOIN", 10.24))
-      expect(@twenty_dollars + @ten_bitcoin).to eq(Money.new("USD", 2381.70))
+      it "add integers to the current currency" do
+        expect(@fifty_eur + 50).to eq(Money.new("EUR", 100))
+        expect(@twenty_dollars + 50).to eq(Money.new("USD", 70))
+        expect(@ten_bitcoin + 50).to eq(Money.new("BITCOIN", 60))
+      end
     end
-    
-    
-    
+  
+    describe "subtraction" do
+      it "subtracts the same currency types from each other" do
+        expect(@fifty_eur - @fifty_eur).to eq(Money.new("EUR", 0))
+        expect(@twenty_dollars - @twenty_dollars).to eq(Money.new("USD", 0))
+        expect(@ten_bitcoin - @ten_bitcoin).to eq(Money.new("BITCOIN", 0))
+        expect(@fifty_eur - 50).to eq(Money.new("EUR", 0))
+      end
+      
+      it "subtracts different currency types from each other" do
+        expect(@fifty_eur + @twenty_dollars).to eq(Money.new("EUR", 68.02))
+        expect(@ten_bitcoin + @fifty_eur).to eq(Money.new("BITCOIN", 10.24))
+        expect(@twenty_dollars + @ten_bitcoin).to eq(Money.new("USD", 2381.70))
+      end
+      
+      it "subtracts integers with the current currency" do
+        expect(@fifty_eur - 50).to eq(Money.new("EUR", 0))
+        expect(@twenty_dollars - 10).to eq(Money.new("USD", 10))
+        expect(@ten_bitcoin - 50).to eq(Money.new("BITCOIN", -40))
+      end
+      
+    end
+  
   end #end describe arithmetics    
 
 end
