@@ -105,6 +105,13 @@ RSpec.describe Moneyexchange do
       expect(@twenty_dollars < Money.new("USD", 10)).to eq(false)
       expect(Money.new("BITCOIN", 10) < Money.new("BITCOIN", 9)).to eq(false)
     end
+    
+    it "compares two currencies of a different type with <" do
+      expect(@fifty_eur < Money.new("USD", 50)).to eq(false)
+      expect(@twenty_dollars < Money.new("EUR", 20)).to eq(true)
+      expect(Money.new("BITCOIN", 10) < Money.new("USD", 10)).to eq(false)
+    end
+    
   
   end #end describe comparisons
 

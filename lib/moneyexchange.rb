@@ -36,7 +36,7 @@ class Money
     
     #if we get this far. currency types are different
     converted_money = money2.convert_to(self.currency) #convert money2 to match
-    self.amount > converted_money.amount ? true : false #currency types now match, is self less than? return true or false
+    self.amount < converted_money.amount ? true : false #currency types now match, is self less than? return true or false
   
   end
   
