@@ -12,6 +12,11 @@ RSpec.describe Moneyexchange do
     expect(Money.new("BITCOIN",30).inspect).to eq("30 BITCOIN")
   end
   
+  it "raises an error for incorrect arguments" do
+    expect { Money.new("us", 100) }.to raise_error(ArgumentError)
+    expect { Money.new("EUR", "kg") }.to raise_error(ArgumentError)
+  end
+  
   #######################
   ##    CONVERSIONS    ##
   #######################
@@ -39,14 +44,14 @@ RSpec.describe Moneyexchange do
  
     it "converts EUR to BITCOIN" do
       @money = Money.new("EUR", 100)
-      @converted_to_bitcoin = @money.convert_to("bitcoin")
+      @converted_to_bitcoin = @money.convert_to("BITCOIN")
       expect(@converted_to_bitcoin.amount).to eq(0.47)
       expect(@converted_to_bitcoin.currency).to eq("BITCOIN")
     end
   
     it "converts USD to EUR" do
       @money = Money.new("USD", 111)
-      @converted_to_eur = @money.convert_to("eur")
+      @converted_to_eur = @money.convert_to("EUR")
       expect(@converted_to_eur.amount).to eq(100)
       expect(@converted_to_eur.currency).to eq("EUR")
     end
@@ -63,10 +68,6 @@ RSpec.describe Moneyexchange do
       @converted_to_usd = @money.convert_to("USD")
       expect(@converted_to_usd.amount).to eq(111)
       expect(@converted_to_usd.currency).to eq("USD")
-    end
-
-    it "raises an error on an incorrect currency_type" do
-      expect { @money.convert_to("ladeda") }.to raise_error(RuntimeError)
     end
   
   end #end describe conversions

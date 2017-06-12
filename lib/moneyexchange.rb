@@ -8,6 +8,9 @@ class Money
   CONVERSION_RATE_BITCOIN = 0.0047.freeze
 
   def initialize(currency, amount)
+    validate_currency(currency)
+    validate_amount(amount)
+    
     @currency = currency
     @amount = amount
   end
@@ -66,10 +69,7 @@ class Money
   end
   
   def convert_to(currency_type)
-    currency_type.upcase!
-    
-    #unless currency type is either USD, EUR, BITCOIN... raise error
-    return raise "#{currency_type} is an incorrect currency type" unless currency_type == "USD" || currency_type == "EUR" || currency_type == "BITCOIN"
+    validate_currency(currency_type)
     
     if self.currency == "USD" #Convert from USD
       if currency_type == "EUR"
@@ -98,6 +98,15 @@ class Money
       
   end #end convert_to
   
+  private
+  
+  def validate_currency(currency)
+    raise ArgumentError.new("Currency must be either USD, EUR, or BITCOIN") unless currency == "USD" || currency == "EUR" || currency =="BITCOIN"  
+  end
+  
+  def validate_amount(amount)
+    raise ArgumentError.new("Amount must be Numeric") unless amount.is_a? Numeric
+  end
     
 end
   
