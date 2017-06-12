@@ -16,64 +16,53 @@ class Money
     "#{self.amount} #{self.currency}"
   end
   
+  def same_currency(money1, money2)
+    if money1.currency == money2.currency
+      money2 #currency types the same, no need to convert
+    else
+      money2.convert_to(money1.currency) #return converted money2 to match so we can compare
+    end
+  end
+  
   def ==(money2)
-    return true if (self.currency == money2.currency) && (self.amount == money2.amount) #same currency type, same amount. #equal
-    return false if (self.currency == money2.currency) && (self.amount != money2.amount) #same currency type, but different amount. #not equal
-     
-    #if we get this far, currency types are different.
-    converted_money = money2.convert_to(self.currency)
-    self.amount == converted_money.amount ? true : false #currency types now match, are the amounts equal? return true or false 
+    money2 = same_currency(self, money2)
+    self.amount == money2.amount ? true : false
   end
   
   def > (money2)
-    return true if (self.currency == money2.currency) && (self.amount > money2.amount) #same currency type, #greater than
-    return false if (self.currency == money2.currency) && (self.amount < money2.amount) #same currency type, #not greater than
-    
-    #if we get this far. currency types are different
-    converted_money = money2.convert_to(self.currency) #convert money2 to match
-    self.amount > converted_money.amount ? true : false #currency types now match, is self greater than? return true or false
+    money2 = same_currency(self, money2)
+    self.amount > money2.amount ? true : false
   end
   
   def < (money2)
-    return true if (self.currency == money2.currency) && (self.amount < money2.amount) #same currency type, #less than
-    return false if (self.currency == money2.currency) && (self.amount > money2.amount) #same currency type #not less than
-    
-    #if we get this far. currency types are different
-    converted_money = money2.convert_to(self.currency) #convert money2 to match
-    self.amount < converted_money.amount ? true : false #currency types now match, is self less than? return true or false
-  
+    money2 = same_currency(self, money2)
+    self.amount < money2.amount ? true : false
   end
   
   def + (money2)
-    return Money.new(self.currency, self.amount + money2) if money2.is_a? Numeric #if money2 is a simple integer, add it
-    return Money.new(self.currency, self.amount + money2.amount) if (self.currency == money2.currency) #same currency type, add them and return new money object
-     
-    #if we get this far, currency types are different
-    converted_money = money2.convert_to(self.currency) #convert money2 to match
-    return Money.new(self.currency, self.amount + converted_money.amount)
+    return Money.new(self.currency, self.amount + money2 ) if money2.is_a? Numeric #if money2 is numeric, add by it and return
+    money2 = same_currency(self, money2)
+    Money.new(self.currency, self.amount + money2.amount)
   end
 
   def - (money2)
-    return Money.new(self.currency, self.amount - money2) if money2.is_a? Numeric #if money2 is a simple float, subtract it
-    return Money.new(self.currency, self.amount - money2.amount) if (self.currency == money2.currency) #same currency type, subtract the amounts and return new money object
-  
-    #if we get this far, currency types are different
-    converted_money = money2.convert_to(self.currency) #convert money2 to match
-    return Money.new(self.currency, self.amount - converted_money.amount)
+    return Money.new(self.currency, self.amount - money2 ) if money2.is_a? Numeric #if money2 is numeric, subtract by it and return
+    money2 = same_currency(self, money2)
+    Money.new(self.currency, self.amount - money2.amount)
   end
   
   def / (money2)
-    return Money.new(self.currency, self.amount / money2 ) if money2.is_a? Numeric #if money2 is numeric, divide by it
+    return Money.new(self.currency, self.amount / money2 ) if money2.is_a? Numeric
       
     #if we get here, money2 is something other than a number. Error out
-    raise "Only integers and floating numbers are accepted for division of a money object."
+    raise "Only numerics are accepted for division of a money object."
   end
   
   def * (money2)
-    return Money.new(self.currency, self.amount * money2 ) if money2.is_a? Numeric #if money2 is numeric, multiply by it
+    return Money.new(self.currency, self.amount * money2 ) if money2.is_a? Numeric
     
     #if we get here, money2 is something other than a number. Error out
-    raise "Only integers and floating numbers are accepted for multiplication of a money object."
+    raise "Only numerics are accepted for multiplication of a money object."
   end
   
   def convert_to(currency_type)
@@ -108,7 +97,6 @@ class Money
     return Money.new(currency_type, amount.round(2))  #return new money object with converted values  
       
   end #end convert_to
-  
   
     
 end
