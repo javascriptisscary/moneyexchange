@@ -21,6 +21,17 @@ class Money
     self.amount == converted_money.amount ? true : false #currency types now match, are the amounts equal? return true or false 
   end
   
+  def > (money2)
+    return true if (self.currency == money2.currency) && (self.amount > money2.amount) #same currency type, #greater than
+    return false if (self.currency == money2.currency) && (self.amount < money2.amount) #same currency type, #not greater than
+  end
+  
+  def < (money2)
+    return true if (self.currency == money2.currency) && (self.amount < money2.amount) #same currency type, #less than
+    return false if (self.currency == money2.currency) && (self.amount > money2.amount) #same currency type #not less than
+  
+  end
+  
   def + (money2)
     return Money.new(self.currency, self.amount + money2) if money2.is_a? Numeric #if money2 is a simple integer, add it
     return Money.new(self.currency, self.amount + money2.amount) if (self.currency == money2.currency) #same currency type, add them and return new money object
