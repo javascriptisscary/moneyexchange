@@ -5,10 +5,11 @@ Write a Ruby gem to perform currency conversion and arithmetics with different c
 ```
 ### Configure the currency rates with respect to a base currency (here EUR):
  
-Money.conversion_rates('EUR', {
-  'USD'     => 1.11,
-  'Bitcoin' => 0.0047
-})
+Conversion rates:
+  Base EUR
+  USD 1.11
+  Bitcoin 0.0047
+
  
 ### Instantiate money objects:
  

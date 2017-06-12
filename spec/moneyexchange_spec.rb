@@ -38,35 +38,35 @@ RSpec.describe Moneyexchange do
     it "converts EUR to USD" do
       @money = Money.new("EUR", 100)
       @converted_to_usd = @money.convert_to("USD")
-      expect(@converted_to_usd.amount).to eq(111.00)
+      expect(@converted_to_usd.amount).to eq((@money.amount * Money::CONVERSION_RATE_USD).round(2)) #111
       expect(@converted_to_usd.currency).to eq("USD")
     end
  
     it "converts EUR to BITCOIN" do
       @money = Money.new("EUR", 100)
       @converted_to_bitcoin = @money.convert_to("BITCOIN")
-      expect(@converted_to_bitcoin.amount).to eq(0.47)
+      expect(@converted_to_bitcoin.amount).to eq((@money.amount * Money::CONVERSION_RATE_BITCOIN)) #0.47
       expect(@converted_to_bitcoin.currency).to eq("BITCOIN")
     end
   
     it "converts USD to EUR" do
       @money = Money.new("USD", 111)
       @converted_to_eur = @money.convert_to("EUR")
-      expect(@converted_to_eur.amount).to eq(100)
+      expect(@converted_to_eur.amount).to eq((@money.amount / Money::CONVERSION_RATE_USD).round(2)) #100
       expect(@converted_to_eur.currency).to eq("EUR")
     end
     
     it "converts BITCOIN to EUR" do
       @money = Money.new("BITCOIN", 0.47)
       @converted_to_eur = @money.convert_to("EUR")
-      expect(@converted_to_eur.amount).to eq(100)
+      expect(@converted_to_eur).to eq(@converted_to_eur.convert_to("BITCOIN")) #100
       expect(@converted_to_eur.currency).to eq("EUR")
     end
     
     it "converts BITCOIN to USD" do
       @money = Money.new("BITCOIN", 0.47)
       @converted_to_usd = @money.convert_to("USD")
-      expect(@converted_to_usd.amount).to eq(111)
+      expect(@converted_to_usd.amount).to eq( ((@money.amount / Money::CONVERSION_RATE_BITCOIN) * Money::CONVERSION_RATE_USD).round(2) ) #111
       expect(@converted_to_usd.currency).to eq("USD")
     end
   
@@ -90,8 +90,8 @@ RSpec.describe Moneyexchange do
     end
     
     it "compares two different currencies with ==" do
-      expect(@fifty_eur_in_usd).to eq(Money.new("EUR", 50))
-      expect(@fifty_eur_in_usd).to eq(Money.new("BITCOIN", 0.235))
+      expect(@fifty_eur_in_usd).to eq(@fifty_eur)
+      expect(@fifty_eur_in_usd).to eq(@fifty_eur.convert_to("BITCOIN"))
       expect(@fifty_eur_in_usd).to_not eq(Money.new("BITCOIN",0.20))
     end
     
@@ -102,7 +102,7 @@ RSpec.describe Moneyexchange do
     end
     
     it "compares two currencies of a different type with >" do
-      expect(@fifty_eur > Money.new("USD", 50)).to eq(true)
+      expect(@fifty_eur > Money.new("USD", 40)).to eq(true)
       expect(@twenty_dollars > Money.new("EUR", 10)).to eq(true)
       expect(Money.new("BITCOIN", 10) > Money.new("USD", 10)).to eq(true)
     end
@@ -141,9 +141,9 @@ RSpec.describe Moneyexchange do
       end
         
       it "adds different currency types together" do
-        expect(@fifty_eur + @twenty_dollars).to eq(Money.new("EUR", 68.02))
-        expect(@ten_bitcoin + @fifty_eur).to eq(Money.new("BITCOIN", 10.24))
-        expect(@twenty_dollars + @ten_bitcoin).to eq(Money.new("USD", 2381.70))
+        expect(@fifty_eur + @twenty_dollars).to eq(Money.new("EUR", 50 + @twenty_dollars.convert_to("EUR").amount)) #68.02
+        expect(@ten_bitcoin + @fifty_eur).to eq(@fifty_eur.convert_to("BITCOIN") + @ten_bitcoin )
+        expect(@twenty_dollars + @ten_bitcoin).to eq(Money.new("USD", 20 + @ten_bitcoin.convert_to("USD").amount)) #2381.70
       end
       
       it "add integers or floats to the current currency" do
@@ -167,9 +167,9 @@ RSpec.describe Moneyexchange do
       end
       
       it "subtracts different currency types from each other" do
-        expect(@fifty_eur - @twenty_dollars).to eq(Money.new("EUR", 31.98))
-        expect(@ten_bitcoin - @fifty_eur).to eq(Money.new("BITCOIN", 9.76))
-        expect(@twenty_dollars - @ten_bitcoin).to eq(Money.new("USD", -2341.70))
+        expect(@fifty_eur - @twenty_dollars).to eq(Money.new("EUR", 50 - @twenty_dollars.convert_to("EUR").amount)) #31.98
+        expect(@ten_bitcoin - @fifty_eur).to eq(@ten_bitcoin - @fifty_eur.convert_to("BITCOIN")) #9.765
+        expect(@twenty_dollars - @ten_bitcoin).to eq(Money.new("USD", (@twenty_dollars.amount - (@ten_bitcoin.convert_to("USD")).amount))) #-2341.70
       end
     end #end subtraction
     

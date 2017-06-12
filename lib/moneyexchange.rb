@@ -93,8 +93,12 @@ class Money
       end
   
     end
-      
-    return Money.new(currency_type, amount.round(2))  #return new money object with converted values  
+    
+    if currency_type == "BITCOIN"  
+      return Money.new(currency_type, amount)  #do not round bitcoin, return object
+    else
+      return Money.new(currency_type, amount.round(2))  #round and return new object
+    end  
       
   end #end convert_to
   
