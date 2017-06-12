@@ -25,7 +25,7 @@ class Money
     return Money.new(self.currency, self.amount + money2) if money2.is_a? Integer #if money2 is a simple integer, add it
     return Money.new(self.currency, self.amount + money2.amount) if (self.currency == money2.currency) #same currency type, add them and return new money object
      
-    #if we get this far, not the same currency
+    #if we get this far, currency types are different
     converted_money = money2.convert_to(self.currency) #convert money2 to match
     return Money.new(self.currency, self.amount + converted_money.amount)
   
@@ -35,6 +35,9 @@ class Money
     return Money.new(self.currency, self.amount - money2) if money2.is_a? Integer #if money2 is a simple integer, add it
     return Money.new(self.currency, self.amount - money2.amount) if (self.currency == money2.currency) #same currency type, subtract the amounts and return new money object
   
+    #if we get this far, currency types are different
+    converted_money = money2.convert_to(self.currency) #convert money2 to match
+    return Money.new(self.currency, self.amount - converted_money.amount)
   end
   
   def convert_to(currency_type)

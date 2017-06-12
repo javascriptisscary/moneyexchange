@@ -130,16 +130,16 @@ RSpec.describe Moneyexchange do
         expect(@fifty_eur - 50).to eq(Money.new("EUR", 0))
       end
       
-      it "subtracts different currency types from each other" do
-        expect(@fifty_eur + @twenty_dollars).to eq(Money.new("EUR", 68.02))
-        expect(@ten_bitcoin + @fifty_eur).to eq(Money.new("BITCOIN", 10.24))
-        expect(@twenty_dollars + @ten_bitcoin).to eq(Money.new("USD", 2381.70))
-      end
-      
       it "subtracts integers with the current currency" do
         expect(@fifty_eur - 50).to eq(Money.new("EUR", 0))
         expect(@twenty_dollars - 10).to eq(Money.new("USD", 10))
         expect(@ten_bitcoin - 50).to eq(Money.new("BITCOIN", -40))
+      end
+      
+      it "subtracts different currency types from each other" do
+        expect(@fifty_eur - @twenty_dollars).to eq(Money.new("EUR", 31.98))
+        expect(@ten_bitcoin - @fifty_eur).to eq(Money.new("BITCOIN", 9.76))
+        expect(@twenty_dollars - @ten_bitcoin).to eq(Money.new("USD", -2341.70))
       end
       
     end
