@@ -17,8 +17,17 @@ class Money
     return false if (self.currency == money2.currency) && (self.amount != money2.amount) #same currency type, but different amount. #not equal
      
     #if we get this far, currency types are different.
-    money2.convert_to(self.currency)
-    self.amount == money2.amount ? true : false #currency types now match, are the amounts equal? return true or false 
+    converted_money = money2.convert_to(self.currency)
+    self.amount == converted_money.amount ? true : false #currency types now match, are the amounts equal? return true or false 
+  end
+  
+  def +(money2)
+    return Money.new(self.currency, self.amount + money2.amount) if (self.currency == money2.currency) #same currency type, add them and return new money object
+    
+    #if we get this far, not the same currency
+    converted_money = money2.convert_to(self.currency) #convert money2 to match
+    return Money.new(self.currency, self.amount + converted_money.amount)
+  
   end
   
   def convert_to(currency_type)
@@ -30,43 +39,34 @@ class Money
     #Convert from USD
     if self.currency == "USD"
       if currency_type == "EUR"
-        @amount = ( self.amount / CONVERSION_RATE_USD)
-        @currency = "EUR"
+        amount = ( self.amount / CONVERSION_RATE_USD)
       elsif currency_type == "BITCOIN"
-        @amount = ( self.amount / CONVERSION_RATE_USD) * CONVERSION_RATE_BITCOIN #convert from USD -> EUR -> BITCOIN
-        @currency = "BITCOIN"
+        amount = ( self.amount / CONVERSION_RATE_USD) * CONVERSION_RATE_BITCOIN #convert from USD -> EUR -> BITCOIN
       end
       
-      @amount = @amount.round(2) #round off to cents
-      return self  #return money object with converted values
+      return Money.new(currency_type, amount.round(2))  #return new money object with converted values
     end
     
     #Convert from EUR
     if self.currency == "EUR"
       if currency_type == "USD"
-        @amount = (CONVERSION_RATE_USD * self.amount)
-        @currency = "USD"
+        amount = (CONVERSION_RATE_USD * self.amount)
       elsif currency_type == "BITCOIN"
-        @amount = (CONVERSION_RATE_BITCOIN * self.amount)
-        @currency = "BITCOIN"
+        amount = (CONVERSION_RATE_BITCOIN * self.amount)
       end
       
-      @amount = @amount.round(2)
-      return self
+      return Money.new(currency_type, amount.round(2))  #return new money object with converted values
     end
     
     #Convert from BITCOIN
     if self.currency == "BITCOIN"
       if currency_type == "EUR"
-        @amount = ( self.amount / CONVERSION_RATE_BITCOIN)
-        @currency = "EUR"
+        amount = ( self.amount / CONVERSION_RATE_BITCOIN)
       elsif currency_type == "USD"
-        @amount = ( self.amount / CONVERSION_RATE_BITCOIN) * CONVERSION_RATE_USD #convert from BITCOIN -> EUR -> USD
-        @currency = "BITCOIN"
+        amount = ( self.amount / CONVERSION_RATE_BITCOIN) * CONVERSION_RATE_USD #convert from BITCOIN -> EUR -> USD
       end
       
-      @amount = @amount.round(2) #round off to cents
-      return self  #return money object with converted values
+      return Money.new(currency_type, amount.round(2))  #return new money object with converted values
     end
       
   end #end convert_to
