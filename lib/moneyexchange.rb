@@ -78,38 +78,30 @@ class Money
     #unless currency type is either USD, EUR, BITCOIN... raise error
     return raise "#{currency_type} is an incorrect currency type" unless currency_type == "USD" || currency_type == "EUR" || currency_type == "BITCOIN"
     
-    #Convert from USD
-    if self.currency == "USD"
+    if self.currency == "USD" #Convert from USD
       if currency_type == "EUR"
         amount = ( self.amount / CONVERSION_RATE_USD)
       elsif currency_type == "BITCOIN"
         amount = ( self.amount / CONVERSION_RATE_USD) * CONVERSION_RATE_BITCOIN #convert from USD -> EUR -> BITCOIN
       end
-      
-      return Money.new(currency_type, amount.round(2))  #return new money object with converted values
-    end
     
-    #Convert from EUR
-    if self.currency == "EUR"
+    elsif self.currency == "EUR" #Convert from EUR
       if currency_type == "USD"
         amount = (CONVERSION_RATE_USD * self.amount)
       elsif currency_type == "BITCOIN"
         amount = (CONVERSION_RATE_BITCOIN * self.amount)
       end
-      
-      return Money.new(currency_type, amount.round(2))  #return new money object with converted values
-    end
     
-    #Convert from BITCOIN
-    if self.currency == "BITCOIN"
+    elsif self.currency == "BITCOIN" #Convert from BITCOIN
       if currency_type == "EUR"
         amount = ( self.amount / CONVERSION_RATE_BITCOIN)
       elsif currency_type == "USD"
         amount = ( self.amount / CONVERSION_RATE_BITCOIN) * CONVERSION_RATE_USD #convert from BITCOIN -> EUR -> USD
       end
-      
-      return Money.new(currency_type, amount.round(2))  #return new money object with converted values
+  
     end
+      
+    return Money.new(currency_type, amount.round(2))  #return new money object with converted values  
       
   end #end convert_to
   

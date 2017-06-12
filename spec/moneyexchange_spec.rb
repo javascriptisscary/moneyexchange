@@ -6,9 +6,9 @@ RSpec.describe Moneyexchange do
   end
   
   
-    #######################
-    ##    CONVERSIONS    ##
-    #######################
+  #######################
+  ##    CONVERSIONS    ##
+  #######################
   
   describe "conversions" do
   
@@ -138,7 +138,7 @@ RSpec.describe Moneyexchange do
         expect(@twenty_dollars + 50.25).to eq(Money.new("USD", 70.25))
         expect(@ten_bitcoin + 50).to eq(Money.new("BITCOIN", 60))
       end
-    end
+    end #end addition
   
     describe "subtraction" do
       it "subtracts the same currency types from each other" do
@@ -158,7 +158,7 @@ RSpec.describe Moneyexchange do
         expect(@ten_bitcoin - @fifty_eur).to eq(Money.new("BITCOIN", 9.76))
         expect(@twenty_dollars - @ten_bitcoin).to eq(Money.new("USD", -2341.70))
       end
-    end
+    end #end subtraction
     
     describe "division" do
       it "divides the currency by numbers" do
@@ -171,9 +171,9 @@ RSpec.describe Moneyexchange do
         expect { @fifty_eur / "h" }.to raise_error(RuntimeError)
         expect { @fifty_eur / @fifty_eur }.to raise_error(RuntimeError)
       end
-    end
+    end #end division
     
-    describe "multiplys" do
+    describe "multiply" do
       it "multiples the currency by numbers" do
         expect(@fifty_eur * 5).to eq(Money.new("EUR", 250))
         expect(@twenty_dollars * 1).to eq(Money.new("USD", 20))
@@ -184,7 +184,7 @@ RSpec.describe Moneyexchange do
         expect { @fifty_eur * "h" }.to raise_error(RuntimeError)
         expect { @fifty_eur * @fifty_eur }.to raise_error(RuntimeError)
       end
-    end
+    end #end multiply
     
   end #end describe arithmetics    
 
