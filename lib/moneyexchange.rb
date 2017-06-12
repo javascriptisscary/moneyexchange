@@ -24,11 +24,19 @@ class Money
   def > (money2)
     return true if (self.currency == money2.currency) && (self.amount > money2.amount) #same currency type, #greater than
     return false if (self.currency == money2.currency) && (self.amount < money2.amount) #same currency type, #not greater than
+    
+    #if we get this far. currency types are different
+    converted_money = money2.convert_to(self.currency) #convert money2 to match
+    self.amount > converted_money.amount ? true : false #currency types now match, is self greater than? return true or false
   end
   
   def < (money2)
     return true if (self.currency == money2.currency) && (self.amount < money2.amount) #same currency type, #less than
     return false if (self.currency == money2.currency) && (self.amount > money2.amount) #same currency type #not less than
+    
+    #if we get this far. currency types are different
+    converted_money = money2.convert_to(self.currency) #convert money2 to match
+    self.amount > converted_money.amount ? true : false #currency types now match, is self less than? return true or false
   
   end
   
@@ -54,7 +62,7 @@ class Money
     return Money.new(self.currency, self.amount / money2 ) if money2.is_a? Numeric #if money2 is numeric, divide by it
       
     #if we get here, money2 is something other than a number. Error out
-    raise "Only integers and floating numbers accepted for division of a money object."
+    raise "Only integers and floating numbers are accepted for division of a money object."
   end
   
   def * (money2)
