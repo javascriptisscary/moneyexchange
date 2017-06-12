@@ -5,6 +5,12 @@ RSpec.describe Moneyexchange do
     expect(Moneyexchange::VERSION).not_to be nil
   end
   
+  it "inspects showing amount and currency in a string" do
+    @money = Money.new("USD", 95.05)
+    expect(@money.inspect).to eq("95.05 USD")
+    expect(Money.new("EUR",20).inspect).to eq("20 EUR")
+    expect(Money.new("BITCOIN",30).inspect).to eq("30 BITCOIN")
+  end
   
   #######################
   ##    CONVERSIONS    ##
@@ -112,7 +118,6 @@ RSpec.describe Moneyexchange do
       expect(Money.new("BITCOIN", 10) < Money.new("USD", 10)).to eq(false)
     end
     
-  
   end #end describe comparisons
 
 

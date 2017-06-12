@@ -12,6 +12,10 @@ class Money
     @amount = amount
   end
   
+  def inspect
+    "#{self.amount} #{self.currency}"
+  end
+  
   def ==(money2)
     return true if (self.currency == money2.currency) && (self.amount == money2.amount) #same currency type, same amount. #equal
     return false if (self.currency == money2.currency) && (self.amount != money2.amount) #same currency type, but different amount. #not equal
