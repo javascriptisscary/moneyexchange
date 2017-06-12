@@ -66,9 +66,9 @@ RSpec.describe Moneyexchange do
   end #end describe conversions
 
 
-    #######################
-    ##    COMPARISONS    ##
-    #######################
+  #######################
+  ##    COMPARISONS    ##
+  #######################
     
   describe "comparisons" do
     before do
@@ -115,9 +115,9 @@ RSpec.describe Moneyexchange do
         expect(@twenty_dollars + @ten_bitcoin).to eq(Money.new("USD", 2381.70))
       end
       
-      it "add integers to the current currency" do
+      it "add integers or floats to the current currency" do
         expect(@fifty_eur + 50).to eq(Money.new("EUR", 100))
-        expect(@twenty_dollars + 50).to eq(Money.new("USD", 70))
+        expect(@twenty_dollars + 50.25).to eq(Money.new("USD", 70.25))
         expect(@ten_bitcoin + 50).to eq(Money.new("BITCOIN", 60))
       end
     end
@@ -127,12 +127,11 @@ RSpec.describe Moneyexchange do
         expect(@fifty_eur - @fifty_eur).to eq(Money.new("EUR", 0))
         expect(@twenty_dollars - @twenty_dollars).to eq(Money.new("USD", 0))
         expect(@ten_bitcoin - @ten_bitcoin).to eq(Money.new("BITCOIN", 0))
-        expect(@fifty_eur - 50).to eq(Money.new("EUR", 0))
       end
       
-      it "subtracts integers with the current currency" do
+      it "subtracts integers or floats with the current currency" do
         expect(@fifty_eur - 50).to eq(Money.new("EUR", 0))
-        expect(@twenty_dollars - 10).to eq(Money.new("USD", 10))
+        expect(@twenty_dollars - 10.05).to eq(Money.new("USD", 9.95))
         expect(@ten_bitcoin - 50).to eq(Money.new("BITCOIN", -40))
       end
       
@@ -141,9 +140,34 @@ RSpec.describe Moneyexchange do
         expect(@ten_bitcoin - @fifty_eur).to eq(Money.new("BITCOIN", 9.76))
         expect(@twenty_dollars - @ten_bitcoin).to eq(Money.new("USD", -2341.70))
       end
-      
     end
-  
+    
+    describe "division" do
+      it "divides the currency by numbers" do
+        expect(@fifty_eur / 5).to eq(Money.new("EUR", 10))
+        expect(@twenty_dollars / 1).to eq(Money.new("USD", 20))
+        expect(@ten_bitcoin / 2.5).to eq(Money.new("BITCOIN", 4))
+      end
+    
+      it "raises an error when given something other than a number" do
+        expect { @fifty_eur / "h" }.to raise_error(RuntimeError)
+        expect { @fifty_eur / @fifty_eur }.to raise_error(RuntimeError)
+      end
+    end
+    
+    describe "multiplys" do
+      it "multiples the currency by numbers" do
+        expect(@fifty_eur * 5).to eq(Money.new("EUR", 250))
+        expect(@twenty_dollars * 1).to eq(Money.new("USD", 20))
+        expect(@ten_bitcoin * 2.5).to eq(Money.new("BITCOIN", 25))
+      end
+    
+      it "raises an error when given something other than a number" do
+        expect { @fifty_eur * "h" }.to raise_error(RuntimeError)
+        expect { @fifty_eur * @fifty_eur }.to raise_error(RuntimeError)
+      end
+    end
+    
   end #end describe arithmetics    
 
 end
